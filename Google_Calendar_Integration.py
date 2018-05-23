@@ -15,6 +15,7 @@ def add(filename,summary,startdatetime,enddatetime,attendees,location="",descrip
         flow = client.flow_from_clientsecrets("client_secret.json", SCOPES)
         creds = tools.run_flow(flow, store)
     guests=[{'email': 'traveldglobe.com@gmail.com'},{'email': 'himanshujain.2792@gmail.com'},{'email':'jainjainhimanshu@gmail.com'}]
+
     for i in attendees:
         guests.append(i)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
@@ -27,9 +28,8 @@ def add(filename,summary,startdatetime,enddatetime,attendees,location="",descrip
         'recurrence': [ 'RRULE:FREQ=DAILY;COUNT=1'],
         'attendees':guests,
         'reminders': {'useDefault': False,
-        'overrides':[{'method': 'email', 'minutes': 24*60},{'method': 'popup', 'minutes': 48*60},{'method': 'email', 'minutes': 72*60},{'method': 'popup', 'minutes': 72*60}]
+        'overrides':[{'method': 'popup', 'minutes': 24*60},{'method': 'popup', 'minutes': 48*60},{'method': 'email', 'minutes': 48*60},{'method': 'email', 'minutes': 96*60}]
                 }
         }
-    print (guests)
     event = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
     print ("Event created")
