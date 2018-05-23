@@ -14,6 +14,9 @@ def add(filename,summary,startdatetime,enddatetime,attendees,location="",descrip
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets("client_secret.json", SCOPES)
         creds = tools.run_flow(flow, store)
+    guests=[{'email': 'traveldglobe.com@gmail.com'},{'email': 'himanshujain.2792@gmail.com'},{'email':'jainjainhimanshu@gmail.com'}]
+    for i in attendees:
+        guests.append(i)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     event = {
         'summary': summary,
@@ -22,10 +25,11 @@ def add(filename,summary,startdatetime,enddatetime,attendees,location="",descrip
         'start':{ 'dateTime':startdatetime ,'timeZone': 'Asia/Kolkata'},
         'end': {'dateTime': enddatetime,'timeZone': 'Asia/Kolkata'},
         'recurrence': [ 'RRULE:FREQ=DAILY;COUNT=1'],
-        'attendees':attendees,
+        'attendees':guests,
         'reminders': {'useDefault': False,
-        'overrides':[{'method': 'email', 'minutes': 48*60},{'method': 'popup', 'minutes': 48*60},{'method': 'sms', 'minutes': 48*60},{'method': 'email', 'minutes': 120*60},{'method': 'popup', 'minutes': 120*60}],
+        'overrides':[{'method': 'email', 'minutes': 24*60},{'method': 'popup', 'minutes': 48*60},{'method': 'email', 'minutes': 72*60},{'method': 'popup', 'minutes': 72*60}]
                 }
         }
+    print (guests)
     event = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
     print ("Event created")
